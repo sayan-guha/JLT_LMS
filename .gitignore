@@ -1,0 +1,36 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Log]s/
+[T]emp/
+
+# IDE files
+.vs/
+.idea/
+.vscode/
+
+# Secrets & configuration
+secrets.json
+appsettings.local.json
+.env
+
+# System files
+.DS_Store
+Thumbs.db
