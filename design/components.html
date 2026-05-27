@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMS Classroom Design System - Component Library</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="components.css">
+  <style>
+    .showcase-layout {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 40px;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      margin: 40px 0 20px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .flex-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .theme-toggle-btn {
+      padding: 8px 16px;
+      background-color: var(--primary-50);
+      color: var(--primary-700);
+      border: 1px solid var(--primary-100);
+      border-radius: var(--radius-md);
+      font-weight: bold;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all var(--transition-fast);
+    }
+    .theme-toggle-btn:hover {
+      background-color: var(--primary-100);
+    }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <header class="header-bar">
+      <div>
+        <h1>Classroom Training Management</h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Design language & Component library for LMS frontend</p>
+      </div>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">🌓 Toggle Theme Mode</button>
+    </header>
+
+    <!-- Cards Section -->
+    <h2 class="section-title">Cards & Containers</h2>
+    <div class="grid-3">
+      <div class="card card-hover">
+        <span class="badge badge-primary">Physical Class</span>
+        <h3 style="margin: 12px 0 8px 0;">Standard Hover Card</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Elevates slightly on hover with a smooth transition. Excellent for listing courses or physical resource catalogs.</p>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+          <button class="btn btn-secondary">View Details</button>
+        </div>
+      </div>
+
+      <div class="card-glass">
+        <span class="badge badge-success">Virtual session</span>
+        <h3 style="margin: 12px 0 8px 0;">Glassmorphic Card</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Modern frosted-glass look with a blur backdrop effect. Perfect for overlay panels or dashboard highlights.</p>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+          <button class="btn btn-primary">Join Meeting</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="badge badge-warning">Hybrid Modality</span>
+        <h3 style="margin: 12px 0 8px 0;">Plain Info Card</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">Simple, flat borders that adapt to the dark mode background natively. Used for general text containers.</p>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+          <button class="btn btn-ghost">Learn More</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons Section -->
+    <h2 class="section-title">Buttons</h2>
+    <div class="flex-group">
+      <button class="btn btn-primary">Primary Action</button>
+      <button class="btn btn-secondary">Secondary Action</button>
+      <button class="btn btn-success">Save / Approve</button>
+      <button class="btn btn-danger">Cancel / Delete</button>
+      <button class="btn btn-ghost">Ghost Option</button>
+      <button class="btn btn-primary" disabled>Disabled State</button>
+    </div>
+
+    <!-- Badges Section -->
+    <h2 class="section-title">Badges</h2>
+    <div class="flex-group">
+      <span class="badge badge-primary">Primary</span>
+      <span class="badge badge-success">Active / Present</span>
+      <span class="badge badge-warning">Waitlisted / Pending</span>
+      <span class="badge badge-danger">Cancelled / Absent</span>
+      <span class="badge badge-info">Excused / Info</span>
+    </div>
+
+    <!-- Forms Section -->
+    <h2 class="section-title">Form Controls</h2>
+    <div style="max-width: 600px; background-color: var(--bg-secondary); padding: 24px; border: 1px solid var(--border-color); border-radius: var(--radius-lg);">
+      <div class="form-group">
+        <label class="form-label" for="training-name">Training Name</label>
+        <input type="text" id="training-name" class="form-control" placeholder="e.g. Advanced .NET Core Architecture">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="session-mode">Session Modality</label>
+        <select id="session-mode" class="form-control">
+          <option>Physical</option>
+          <option>Virtual</option>
+          <option>Hybrid</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="description">Short Description</label>
+        <textarea id="description" class="form-control" rows="3" placeholder="Enter session outline..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-check">
+          <input type="checkbox" class="form-check-input" checked>
+          <span>Require Attendance Auto-Tracking</span>
+        </label>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+        <button class="btn btn-secondary">Discard</button>
+        <button class="btn btn-primary">Create Template</button>
+      </div>
+    </div>
+
+    <!-- Tables Section -->
+    <h2 class="section-title">Data Tables</h2>
+    <div class="table-container">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Instructor Name</th>
+            <th>Specialization</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 600;">Sarah Connor</td>
+            <td>C#, AWS, Kubernetes</td>
+            <td><span class="badge badge-success">Active</span></td>
+            <td><button class="btn btn-ghost" style="padding: 4px 8px;">Schedule</button></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">John Doe</td>
+            <td>Design Patterns, React, Node.js</td>
+            <td><span class="badge badge-success">Active</span></td>
+            <td><button class="btn btn-ghost" style="padding: 4px 8px;">Schedule</button></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Miles Dyson</td>
+            <td>System Architecture, AI, Python</td>
+            <td><span class="badge badge-danger">On Leave</span></td>
+            <td><button class="btn btn-ghost" style="padding: 4px 8px;" disabled>Schedule</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal Trigger -->
+    <h2 class="section-title">Interactive Elements</h2>
+    <div class="flex-group">
+      <button class="btn btn-primary" onclick="openModal()">演示 Dialog / Modal Popup</button>
+    </div>
+  </div>
+
+  <!-- Modal Component -->
+  <div class="modal-overlay" id="demo-modal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Create Session Blueprint</h3>
+        <button class="btn btn-ghost" onclick="closeModal()" style="border-radius: 50%; padding: 4px; width: 32px; height: 32px; font-weight: bold; line-height: 1;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">Fill in the details to add a session to the training template.</p>
+        <div class="form-group">
+          <label class="form-label" for="modal-title">Session Title</label>
+          <input type="text" id="modal-title" class="form-control" placeholder="e.g. Day 1: Dependency Injection Deep Dive">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="modal-duration">Duration (Minutes)</label>
+          <input type="number" id="modal-duration" class="form-control" value="120">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" onclick="closeModal()">Add Session</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggler script
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Modal Control
+    function openModal() {
+      document.getElementById('demo-modal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('demo-modal').classList.remove('active');
+    }
+    function closeModalOnOverlay(e) {
+      if (e.target.id === 'demo-modal') {
+        closeModal();
+      }
+    }
+
+    // System theme sync on load
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</body>
+</html>
