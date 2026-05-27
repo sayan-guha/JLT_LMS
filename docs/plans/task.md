@@ -4,8 +4,8 @@
 |------|--------|
 | Task 1: Domain Enums | `done` |
 | Task 2: Core Domain Entities — PhysicalResource & InstructorProfile | `done` |
-| Task 3: Core Domain Entities — TrainingTemplate & TemplateSession | `in_progress` |
-| Task 4: Core Domain Entities — TrainingBatch, Session, SessionInstructor | `not_started` |
+| Task 3: Core Domain Entities — TrainingTemplate & TemplateSession | `done` |
+| Task 4: Core Domain Entities — TrainingBatch, Session, SessionInstructor | `in_progress` |
 | Task 5: Core Domain Entities — Enrollment & AttendanceRecord | `not_started` |
 | Task 6: Domain Interface — IVirtualMeetingProvider | `not_started` |
 | Task 7: EF Core Configurations | `not_started` |
