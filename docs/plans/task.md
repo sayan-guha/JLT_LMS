@@ -6,8 +6,8 @@
 | Task 2: Core Domain Entities — PhysicalResource & InstructorProfile | `done` |
 | Task 3: Core Domain Entities — TrainingTemplate & TemplateSession | `done` |
 | Task 4: Core Domain Entities — TrainingBatch, Session, SessionInstructor | `done` |
-| Task 5: Core Domain Entities — Enrollment & AttendanceRecord | `in_progress` |
-| Task 6: Domain Interface — IVirtualMeetingProvider | `not_started` |
+| Task 5: Core Domain Entities — Enrollment & AttendanceRecord | `done` |
+| Task 6: Domain Interface — IVirtualMeetingProvider | `in_progress` |
 | Task 7: EF Core Configurations | `not_started` |
 | Task 8: EF Migration | `not_started` |
 | Task 9: Application Layer — TrainingTemplate CQRS Commands | `not_started` |
