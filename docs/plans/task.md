@@ -2,7 +2,7 @@
 
 | Task | Status |
 |------|--------|
-| Task 1: Create AI Agent Test File and Helpers | `done` |
-| Task 2: Read Operation Tests — List Users, Roles, Content | `done` |
-| Task 3: Write Operation Tests — Create User with Confirmation + Backend Verification | `done` |
-| Task 4: Multi-Step Conversation Test and Cleanup | `done` |
+| Task 1: Create `AgentCopilot.tsx` Component & Theming | `done` |
+| Task 2: Connect Backend Authentication & API Fetching in Admin views | `in_progress` |
+| Task 3: Hook up AI Agent Sidebar to JLT.AIProxy | `not_started` |
+| Task 4: Complete end-to-end integration and verified testing | `not_started` |
