@@ -162,7 +162,7 @@ public class ToolRegistry
                     ""pageNumber"": { ""type"": ""integer"", ""description"": ""Page number (default 1)"" },
                     ""pageSize"": { ""type"": ""integer"", ""description"": ""Page size (default 10)"" },
                     ""searchTerm"": { ""type"": ""string"", ""description"": ""Search query to filter groups"" },
-                    ""type"": ""string"", ""description"": ""Filter by group type (e.g. Static, Dynamic)""
+                    ""type"": { ""type"": ""string"", ""description"": ""Filter by group type (e.g. Static, Dynamic)"" }
                 }
             }"
         ));
