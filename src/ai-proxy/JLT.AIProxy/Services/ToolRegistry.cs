@@ -83,6 +83,7 @@ public class ToolRegistry
                 ""type"": ""object"",
                 ""properties"": {
                     ""email"": { ""type"": ""string"", ""description"": ""User email address"" },
+                    ""password"": { ""type"": ""string"", ""description"": ""Password for the new user (must be at least 8 characters, with uppercase, lowercase, digit, and special char)"" },
                     ""firstName"": { ""type"": ""string"", ""description"": ""User first name"" },
                     ""lastName"": { ""type"": ""string"", ""description"": ""User last name"" },
                     ""role"": { ""type"": ""string"", ""description"": ""Initial system role (e.g. Learner, Instructor)"" },
@@ -90,7 +91,7 @@ public class ToolRegistry
                     ""location"": { ""type"": ""string"", ""description"": ""User location"" },
                     ""attributesJson"": { ""type"": ""string"", ""description"": ""JSON string representing additional dynamic attributes"" }
                 },
-                ""required"": [""email"", ""firstName"", ""lastName"", ""role""]
+                ""required"": [""email"", ""password"", ""firstName"", ""lastName"", ""role""]
             }"
         ));
 
@@ -364,7 +365,7 @@ public class ToolRegistry
                 ""properties"": {
                     ""title"": { ""type"": ""string"", ""description"": ""Content title"" },
                     ""description"": { ""type"": ""string"", ""description"": ""Content description"" },
-                    ""contentType"": { ""type"": ""string"", ""description"": ""Content type: 'Article', 'Document', or 'Scorm'"" },
+                    ""contentType"": { ""type"": ""string"", ""description"": ""Content type: 'Document', 'Media', 'SCORM', 'xAPI', 'LTI', 'Hyperlink', 'EmbedLink', or 'Image'"" },
                     ""resourceUrl"": { ""type"": ""string"", ""description"": ""URL pointing to the resource file or article link"" },
                     ""durationMinutes"": { ""type"": ""integer"", ""description"": ""Estimated completion time in minutes"" },
                     ""category"": { ""type"": ""string"", ""description"": ""Content category"" },
