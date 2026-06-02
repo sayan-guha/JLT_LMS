@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, Bot, User, Check, X, ShieldAlert, Loader2, Sparkles } from 'lucide-react';
+import { AgentEventBus } from './core/AgentEventBus';
 
 interface AgentCopilotProps {
   activeSection: string;
@@ -226,6 +227,20 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
           }
         }
       ]);
+    } else if (result.type === 'ui_action') {
+      addLogMessage(`[AI Gateway] Intercepted UI Action: ${result.data?.action}`);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Guid(),
+          sender: 'agent',
+          text: result.content || "I've updated the center panel for you.",
+          time,
+          type: 'text'
+        }
+      ]);
+      // Publish event to the rest of the application
+      AgentEventBus.publish('UI_COMMAND', result.data);
     } else if (result.type === 'text') {
       addLogMessage(`[AI Gateway] Text response received.`);
       setMessages((prev) => [
