@@ -524,6 +524,65 @@ public class ToolRegistry
                 ""required"": [""fieldName"", ""label"", ""fieldType""]
             }"
         ));
+
+        // ------------------ UI CONTROLS (Intercepted by Proxy) ------------------
+        Register(new ToolDefinition(
+            "ui_set_widget_filter",
+            "Instructs the frontend UI to filter an existing widget (e.g., users, content). Use this to show specific data in the center panel without needing to read it yourself.",
+            false,
+            "UI",
+            "N/A",
+            @"{
+                ""type"": ""object"",
+                ""properties"": {
+                    ""module"": { ""type"": ""string"", ""description"": ""The module to target: 'users', 'content', 'classroom', 'assessments'"" },
+                    ""searchQuery"": { ""type"": ""string"", ""description"": ""The search term or filter to apply"" }
+                },
+                ""required"": [""module""]
+            }"
+        ));
+
+        Register(new ToolDefinition(
+            "ui_render_custom_view",
+            "Instructs the frontend UI to render a custom data grid in the center panel for data that doesn't fit a standard widget.",
+            false,
+            "UI",
+            "N/A",
+            @"{
+                ""type"": ""object"",
+                ""properties"": {
+                    ""title"": { ""type"": ""string"", ""description"": ""Title of the view"" },
+                    ""columns"": { 
+                        ""type"": ""array"", 
+                        ""items"": { ""type"": ""string"" },
+                        ""description"": ""Column headers""
+                    },
+                    ""data"": { 
+                        ""type"": ""array"", 
+                        ""items"": { ""type"": ""object"" },
+                        ""description"": ""Array of objects matching the columns""
+                    }
+                },
+                ""required"": [""title"", ""columns"", ""data""]
+            }"
+        ));
+
+        // ------------------ DOCUMENT RAG ------------------
+        Register(new ToolDefinition(
+            "query_document",
+            "Query the contents of a document that the user uploaded. Returns chunks of text from the document. Use this to read the user's uploaded files (e.g. CSVs, PDFs, text files).",
+            false,
+            "INTERNAL_RAG",
+            "N/A",
+            @"{
+                ""type"": ""object"",
+                ""properties"": {
+                    ""documentId"": { ""type"": ""string"", ""description"": ""The ID of the document to query"" },
+                    ""query"": { ""type"": ""string"", ""description"": ""The search query or instruction"" }
+                },
+                ""required"": [""documentId"", ""query""]
+            }"
+        ));
     }
 
     private void Register(ToolDefinition tool)
