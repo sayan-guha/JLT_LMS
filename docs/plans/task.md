@@ -1,9 +1,5 @@
-# Task Tracker: Neo Center Panel Control
-
 | Task | Status |
 |------|--------|
-| Task 1: Update AI Proxy (ToolRegistry & OpenAIService) | `done` |
-| Task 2: Create AgentResultWidget | `[/]` |
-| Task 3: Update AgentCopilot to handle UI_COMMAND | `not_started` |
-| Task 4: Update AdminPanel to render Result View | `[/]` |
-| Task 5: Update UserManagement to handle UI filters | `[/]` |
+| Task 1: Create Document Store and Upload Endpoint in AI Proxy | `[/]` |
+| Task 2: Register query_document Tool | `not_started` |
+| Task 3: Add File Upload UI in Agent Copilot | `not_started` |
