@@ -150,6 +150,21 @@ public class ToolRegistry
             }"
         ));
 
+        Register(new ToolDefinition(
+            "process_user_csv",
+            "Process an uploaded CSV document containing user details for bulk creation.",
+            true,
+            "INTERNAL_RAG",
+            "internal://process-user-csv",
+            @"{
+                ""type"": ""object"",
+                ""properties"": {
+                    ""documentId"": { ""type"": ""string"", ""description"": ""The document ID of the uploaded CSV file"" }
+                },
+                ""required"": [""documentId""]
+            }"
+        ));
+
         // ------------------ USER GROUPS ------------------
         Register(new ToolDefinition(
             "list_user_groups",

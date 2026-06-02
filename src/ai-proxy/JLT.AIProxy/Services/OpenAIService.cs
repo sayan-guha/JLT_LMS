@@ -219,10 +219,35 @@ public class OpenAIService
                         var argsJson = toolCall.FunctionArguments.ToString();
                         var args = JsonSerializer.Deserialize<Dictionary<string, string>>(argsJson) ?? new();
                         var docId = args.GetValueOrDefault("documentId") ?? "";
-                        var query = args.GetValueOrDefault("query") ?? "";
                         
-                        var toolResult = _documentStore.QueryDocument(docId, query);
-                        history.Add(new ToolChatMessage(toolCall.Id, JsonSerializer.Serialize(new { result = toolResult })));
+                        if (toolName == "query_document")
+                        {
+                            var query = args.GetValueOrDefault("query") ?? "";
+                            var toolResult = _documentStore.QueryDocument(docId, query);
+                            history.Add(new ToolChatMessage(toolCall.Id, JsonSerializer.Serialize(new { result = toolResult })));
+                        }
+                        else if (toolName == "process_user_csv")
+                        {
+                            var content = _documentStore.GetDocument(docId);
+                            if (content == null)
+                            {
+                                history.Add(new ToolChatMessage(toolCall.Id, JsonSerializer.Serialize(new { error = "Document not found in proxy memory." })));
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    var reqData = new Dictionary<string, object> { { "csvContent", content } };
+                                    var toolResult = await backendClient.CallAsync("POST", "/api/users/bulk-import-csv", reqData, authToken, tenantSlug);
+                                    history.Add(new ToolChatMessage(toolCall.Id, toolResult));
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "Error processing CSV");
+                                    history.Add(new ToolChatMessage(toolCall.Id, JsonSerializer.Serialize(new { error = ex.Message })));
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -366,6 +391,16 @@ IMPORTANT RULES OF OPERATION:
 3. Whenever you display structured list data, table data, single entity details, or key metrics to the user, you MUST ALSO output a structured JSON block at the end of your response, wrapped inside '---DATA---' and '---END---' delimiters. This block is used by the frontend to render the information in a premium visual workspace.
 4. Keep the text portion of your response warm, friendly, concise, and focused on helping the administrator.
 5. Do not output the JSON delimiters inside standard markdown code blocks, just write them directly.
+
+USER MANAGEMENT GUIDELINES:
+- **List Users Example Payload**: `{ ""pageNumber"": 1, ""pageSize"": 10, ""isActive"": true }`
+- **Create User Example Payload**: `{ ""email"": ""john.doe@example.com"", ""password"": ""Password123!"", ""firstName"": ""John"", ""lastName"": ""Doe"", ""role"": ""Learner"", ""department"": ""Engineering"", ""location"": ""New York"" }`
+- **Bulk Create via CSV**: If the user asks to bulk create users, first provide them with this CSV template:
+  ```csv
+  Email, Password, FirstName, LastName, Role, Department, Location
+  john.doe@example.com, Password123!, John, Doe, Learner, Engineering, New York
+  ```
+  Once they upload the CSV, the system will notify you with a documentId. FIRST use `query_document` to read the first few lines and verify the headers. If they match the template, use the `process_user_csv` tool with the documentId to bulk create the users.
 
 JSON Data structures to output for the workspace:
 

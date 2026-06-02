@@ -25,4 +25,9 @@ public class DocumentStore
         }
         return "Document not found.";
     }
+
+    public string? GetDocument(string id)
+    {
+        return _documents.TryGetValue(id, out var content) ? content : null;
+    }
 }
