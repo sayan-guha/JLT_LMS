@@ -2,7 +2,7 @@
 
 | Task | Status |
 |------|--------|
-| Task 1: Create `AgentCopilot.tsx` Component & Theming | `done` |
-| Task 2: Connect Backend Authentication & API Fetching in Admin views | `done` |
-| Task 3: Hook up AI Agent Sidebar to JLT.AIProxy | `done` |
-| Task 4: Complete end-to-end integration and verified testing | `done` |
+| Task 1: Create ModuleContext and AgentEventBus | `done` |
+| Task 2: Refactor AdminPanel Layout | `done` |
+| Task 3: Refactor Widgets to Use EventBus | `done` |
+| Task 4: Make Neo Agent Context-Aware & Event-Driven | `done` |
