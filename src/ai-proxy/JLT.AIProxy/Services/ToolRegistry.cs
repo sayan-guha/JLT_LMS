@@ -566,6 +566,23 @@ public class ToolRegistry
                 ""required"": [""title"", ""columns"", ""data""]
             }"
         ));
+
+        // ------------------ DOCUMENT RAG ------------------
+        Register(new ToolDefinition(
+            "query_document",
+            "Query the contents of a document that the user uploaded. Returns chunks of text from the document. Use this to read the user's uploaded files (e.g. CSVs, PDFs, text files).",
+            false,
+            "INTERNAL_RAG",
+            "N/A",
+            @"{
+                ""type"": ""object"",
+                ""properties"": {
+                    ""documentId"": { ""type"": ""string"", ""description"": ""The ID of the document to query"" },
+                    ""query"": { ""type"": ""string"", ""description"": ""The search query or instruction"" }
+                },
+                ""required"": [""documentId"", ""query""]
+            }"
+        ));
     }
 
     private void Register(ToolDefinition tool)
