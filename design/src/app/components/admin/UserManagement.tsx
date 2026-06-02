@@ -1,5 +1,6 @@
 import { Search, Plus, MoreVertical, Download, Filter, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { AgentEventBus } from './core/AgentEventBus';
 
 interface UserManagementProps {
   authToken: string;
@@ -42,6 +43,15 @@ export function UserManagement({ authToken, refreshTrigger }: UserManagementProp
     }
     fetchUsers();
   }, [authToken, refreshTrigger]);
+
+  useEffect(() => {
+    const unsubscribe = AgentEventBus.subscribe('UI_COMMAND', (cmd: any) => {
+      if (cmd.action === 'ui_set_widget_filter' && cmd.payload?.module === 'users') {
+        setSearchQuery(cmd.payload.searchQuery || '');
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const filteredUsers = usersList.filter(user => {
     const query = searchQuery.toLowerCase();

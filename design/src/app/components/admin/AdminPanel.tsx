@@ -6,6 +6,8 @@ import { ContentManagement } from './ContentManagement';
 import { AIAgents } from './AIAgents';
 import { Analytics } from './Analytics';
 import { AgentCopilot } from './AgentCopilot';
+import { AgentEventBus } from './core/AgentEventBus';
+import { AgentResultWidget } from './AgentResultWidget';
 
 type AdminSection = 'users' | 'skills' | 'content' | 'agents' | 'analytics';
 
@@ -18,6 +20,7 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
   const [authToken, setAuthToken] = useState('');
   const [tenantSlug] = useState('demo');
   const [refreshTrigger, setRefreshTrigger] = useState<Record<string, number>>({});
+  const [customView, setCustomView] = useState<{title: string, columns: string[], data: any[]} | null>(null);
 
   const menuItems = [
     { id: 'users' as AdminSection, label: 'User Management', icon: Users },
@@ -33,6 +36,19 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
       [section]: (prev[section] || 0) + 1
     }));
   };
+
+  useEffect(() => {
+    const unsubscribe = AgentEventBus.subscribe('UI_COMMAND', (cmd: any) => {
+      if (cmd.action === 'ui_render_custom_view' && cmd.payload) {
+        setCustomView({
+          title: cmd.payload.title,
+          columns: cmd.payload.columns,
+          data: cmd.payload.data
+        });
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     async function performAutoLogin() {
@@ -72,6 +88,17 @@ export function AdminPanel({ onBack }: AdminPanelProps) {
   }, []);
 
   const renderSection = () => {
+    if (customView) {
+      return (
+        <AgentResultWidget
+          title={customView.title}
+          columns={customView.columns}
+          data={customView.data}
+          onDismiss={() => setCustomView(null)}
+        />
+      );
+    }
+
     switch (activeSection) {
       case 'users':
         return <UserManagement authToken={authToken} refreshTrigger={refreshTrigger.users || 0} />;

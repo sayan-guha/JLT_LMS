@@ -23,6 +23,7 @@ builder.Services.AddHttpClient("BackendApi", client =>
 
 // Register AI orchestration services
 builder.Services.AddSingleton<ToolRegistry>();
+builder.Services.AddSingleton<DocumentStore>();
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddScoped<BackendApiClient>();
 
@@ -110,5 +111,20 @@ app.MapPost("/api/agent/chat/reset/{conversationId}", (
     openAiService.ResetConversation(conversationId);
     return Results.Ok(new { message = "Conversation history cleared successfully." });
 });
+
+// File Upload endpoint
+app.MapPost("/api/agent/upload", async (IFormFile file, [FromServices] DocumentStore store) =>
+{
+    if (file == null || file.Length == 0)
+    {
+        return Results.BadRequest(new { error = "No file uploaded." });
+    }
+
+    using var reader = new StreamReader(file.OpenReadStream());
+    var content = await reader.ReadToEndAsync();
+    
+    var id = store.AddDocument(content);
+    return Results.Ok(new { documentId = id, filename = file.FileName, success = true });
+}).DisableAntiforgery();
 
 app.Run();

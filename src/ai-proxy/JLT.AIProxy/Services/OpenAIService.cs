@@ -27,10 +27,13 @@ public class OpenAIService
     // Pending destructive tool calls: ToolCallId -> PendingToolCall
     private readonly ConcurrentDictionary<string, PendingToolCall> _pendingToolCalls = new();
 
-    public OpenAIService(ToolRegistry toolRegistry, IConfiguration config, ILogger<OpenAIService> logger)
+    private readonly DocumentStore _documentStore;
+
+    public OpenAIService(ToolRegistry toolRegistry, IConfiguration config, ILogger<OpenAIService> logger, DocumentStore documentStore)
     {
         _toolRegistry = toolRegistry;
         _logger = logger;
+        _documentStore = documentStore;
 
         var apiKey = config["OpenAI:ApiKey"] ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY") 
             ?? throw new InvalidOperationException("OpenAI API Key is not configured. Set 'OpenAI:ApiKey' or 'OPENAI_API_KEY' environment variable.");
@@ -173,6 +176,16 @@ public class OpenAIService
                         continue;
                     }
 
+                    if (toolDef.HttpMethod == "UI")
+                    {
+                        _logger.LogInformation("Intercepting UI control command: {ToolName}", toolName);
+                        var argsJson = toolCall.FunctionArguments.ToString();
+                        var parsedArgs = JsonSerializer.Deserialize<object>(argsJson) ?? new object();
+                        
+                        // Return immediately to frontend with ui_action
+                        return new ChatResponse("ui_action", "I've updated the center panel for you.", new { action = toolName, payload = parsedArgs });
+                    }
+
                     if (toolDef.IsDestructive)
                     {
                         _logger.LogInformation("Tool {ToolName} is destructive. Intercepting for confirmation.", toolName);
@@ -199,6 +212,17 @@ public class OpenAIService
                             parsedArgs
                         );
                         break; // Stop loop and request confirmation immediately for first destructive action
+                    }
+                    else if (toolDef.HttpMethod == "INTERNAL_RAG")
+                    {
+                        _logger.LogInformation("Executing internal RAG tool {ToolName}...", toolName);
+                        var argsJson = toolCall.FunctionArguments.ToString();
+                        var args = JsonSerializer.Deserialize<Dictionary<string, string>>(argsJson) ?? new();
+                        var docId = args.GetValueOrDefault("documentId") ?? "";
+                        var query = args.GetValueOrDefault("query") ?? "";
+                        
+                        var toolResult = _documentStore.QueryDocument(docId, query);
+                        history.Add(new ToolChatMessage(toolCall.Id, JsonSerializer.Serialize(new { result = toolResult })));
                     }
                     else
                     {
