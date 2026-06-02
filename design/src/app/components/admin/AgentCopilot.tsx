@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User, Check, X, ShieldAlert, Loader2, Sparkles } from 'lucide-react';
+import { Send, Bot, User, Check, X, ShieldAlert, Loader2, Sparkles, Paperclip } from 'lucide-react';
 import { AgentEventBus } from './core/AgentEventBus';
 
 interface AgentCopilotProps {
@@ -63,6 +63,7 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(() => Guid());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function Guid() {
     return 'xxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -99,6 +100,78 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
         time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
       }
     ]);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input so the same file can be selected again
+    e.target.value = '';
+    
+    setIsLoading(true);
+    addLogMessage(`[UI] Uploading file: ${file.name}`);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('http://localhost:5200/api/agent/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      const uploadMsg: Message = {
+        id: Guid(),
+        sender: 'system',
+        text: `Uploaded file ${result.filename}. Document ID is ${result.documentId}. You can query this document.`,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+        type: 'text'
+      };
+      
+      setMessages((prev) => [...prev, uploadMsg]);
+      
+      // Notify backend agent about this implicitly
+      addLogMessage(`[AI Gateway] Notifying agent about uploaded document ${result.documentId}`);
+      const bgResponse = await fetch('http://localhost:5200/api/agent/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authToken ? `Bearer ${authToken}` : '',
+          'X-Tenant-Slug': tenantSlug || 'demo'
+        },
+        body: JSON.stringify({
+          conversationId,
+          message: `SYSTEM: User has uploaded a document named '${result.filename}'. The Document ID is '${result.documentId}'. You can now use query_document to read its contents if needed.`
+        })
+      });
+      
+      if (bgResponse.ok) {
+         const bgResult = await bgResponse.json();
+         processResponse(bgResult);
+      }
+
+    } catch (err: any) {
+      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Guid(),
+          sender: 'agent',
+          text: `File upload failed: ${err.message}`,
+          time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+          type: 'error'
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSend = async () => {
@@ -297,6 +370,7 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
           }
 
           const isUser = msg.sender === 'user';
+          const isSystem = msg.sender === 'system';
           return (
             <div key={msg.id} className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
               {/* Bubble wrapper */}
@@ -304,6 +378,8 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
                 className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-sm tracking-tight leading-relaxed shadow-sm ${
                   isUser
                     ? 'bg-[#003D82] text-white rounded-br-none'
+                    : isSystem
+                    ? 'bg-slate-100 text-slate-700 border border-slate-200 rounded-bl-none text-xs font-mono'
                     : msg.type === 'error'
                     ? 'bg-red-50 text-red-800 border border-red-100 rounded-bl-none'
                     : 'bg-white border border-[rgba(0,0,0,0.08)] text-black rounded-bl-none'
@@ -359,6 +435,20 @@ export function AgentCopilot({ activeSection, authToken, tenantSlug, onRefresh }
       {/* Input Box Footer */}
       <div className="p-3 border-t border-[rgba(0,0,0,0.08)] bg-white">
         <div className="flex items-center gap-2">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            className="hidden" 
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading}
+            className="w-8 h-8 rounded-md bg-[#F5F5F5] hover:bg-[#EFEFEF] border border-transparent disabled:opacity-50 flex items-center justify-center transition-colors text-slate-500 flex-shrink-0"
+            title="Upload Document"
+          >
+            <Paperclip className="w-4 h-4" strokeWidth={1.5} />
+          </button>
           <input
             type="text"
             value={inputText}
