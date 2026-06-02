@@ -173,6 +173,16 @@ public class OpenAIService
                         continue;
                     }
 
+                    if (toolDef.HttpMethod == "UI")
+                    {
+                        _logger.LogInformation("Intercepting UI control command: {ToolName}", toolName);
+                        var argsJson = toolCall.FunctionArguments.ToString();
+                        var parsedArgs = JsonSerializer.Deserialize<object>(argsJson) ?? new object();
+                        
+                        // Return immediately to frontend with ui_action
+                        return new ChatResponse("ui_action", "I've updated the center panel for you.", new { action = toolName, payload = parsedArgs });
+                    }
+
                     if (toolDef.IsDestructive)
                     {
                         _logger.LogInformation("Tool {ToolName} is destructive. Intercepting for confirmation.", toolName);
